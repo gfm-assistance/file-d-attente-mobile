@@ -2,34 +2,21 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Suivi de Ticket - File d'attente</title>
-    <!-- Premium Google Fonts -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès File d'Attente</title>
+    <!-- Google Font Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         *, *:before, *:after {
             box-sizing: border-box;
         }
 
-        :root {
-            --bg-gradient: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
-            --card-bg: rgba(30, 41, 59, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --accent-blue: #3b82f6;
-            --accent-green: #10b981;
-            --accent-orange: #f59e0b;
-            --accent-red: #ef4444;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-        }
-
         body {
             font-family: 'Outfit', sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-main);
+            background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+            color: #f8fafc;
             margin: 0;
             padding: 0;
             min-height: 100vh;
@@ -47,1341 +34,318 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            min-height: 100vh;
         }
 
-        /* Header */
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .loader-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
             width: 100%;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, var(--accent-blue), #60a5fa);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        }
-
-        h1 {
-            font-size: 1.25rem;
-            font-weight: 800;
-            margin: 0;
-            letter-spacing: -0.02em;
-            background: linear-gradient(to right, #ffffff, #cbd5e1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* iOS Installation Alert */
-        .ios-banner {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 16px;
-            padding: 1.25rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            animation: slideDown 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .ios-banner-header {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 700;
-            font-size: 1rem;
-            color: #93c5fd;
-        }
-
-        .ios-banner-body {
-            font-size: 0.9rem;
-            line-height: 1.4;
-            color: #bfdbfe;
-        }
-
-        .ios-icon-helper {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 2px 6px;
-            border-radius: 4px;
-            margin: 0 2px;
-            vertical-align: middle;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 1.5rem;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-sizing: border-box;
-        }
-
-        /* Input Card for Search */
-        .input-group {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            text-align: center;
         }
 
-        input {
-            flex: 1;
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            font-family: inherit;
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        p {
+            color: #94a3b8;
             font-size: 1rem;
-            color: white;
-            outline: none;
-            text-transform: uppercase;
-            transition: border-color 0.2s;
+            margin: 0;
+            line-height: 1.5;
         }
 
-        input:focus {
-            border-color: var(--accent-blue);
-        }
-
-        button.btn-primary {
-            background: var(--accent-blue);
+        .btn-retry {
+            background: #3b82f6;
             color: white;
             border: none;
             border-radius: 12px;
-            padding: 0.75rem 1.25rem;
-            font-weight: 700;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        button.btn-primary:active {
-            transform: scale(0.97);
-        }
-
-        /* Ticket Tracker Area */
-        .ticket-status-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .ticket-num-badge {
-            font-size: 4rem;
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            margin: 0;
-            background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
-        }
-
-        .status-pill {
-            padding: 0.5rem 1.25rem;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            letter-spacing: 0;
-            text-transform: uppercase;
-        }
-
-        .status-attente {
-            background: rgba(245, 158, 11, 0.15);
-            color: var(--accent-orange);
-            border: 1px solid rgba(245, 158, 11, 0.25);
-        }
-
-        .status-appel {
-            background: rgba(16, 185, 129, 0.2);
-            color: var(--accent-green);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            animation: pulseBg 1.5s infinite;
-        }
-
-        .status-absent {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--accent-red);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-        }
-
-        .status-termine {
-            background: rgba(148, 163, 184, 0.15);
-            color: var(--text-muted);
-            border: 1px solid rgba(148, 163, 184, 0.25);
-        }
-
-        /* Queue progress info */
-        .progress-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1.5rem;
-            width: 100%;
-            margin-top: 0.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .progress-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 1;
-        }
-
-        .progress-val {
-            font-size: 2.25rem;
-            font-weight: 800;
-            color: white;
-            line-height: 1.2;
-        }
-
-        .progress-lbl {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            text-transform: uppercase;
-        }
-
-        /* Toggle Notification Button */
-        .notif-toggle-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            color: white;
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            transition: all 0.2s;
-        }
-
-        .notif-toggle-btn.subscribed {
-            background: rgba(16, 185, 129, 0.1);
-            border-color: rgba(16, 185, 129, 0.3);
-            color: var(--accent-green);
-        }
-
-        .notif-toggle-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Live Guichets Sidebar styled for mobile */
-        .live-guichets-title {
+            padding: 0.75rem 1.5rem;
             font-weight: 700;
             font-size: 1rem;
-            color: var(--text-main);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .guichets-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .guichet-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
-            border: 1px solid rgba(255,255,255,0.03);
-        }
-
-        .guichet-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .guichet-ticket {
-            font-weight: 800;
-            font-size: 1.1rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 6px;
-        }
-
-        .guichet-ticket.active {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
-        }
-
-        .guichet-status-lbl {
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        /* Animations */
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulseBg {
-            0%, 100% { background: rgba(16, 185, 129, 0.2); }
-            50% { background: rgba(16, 185, 129, 0.35); }
-        }
-
-        /* Floating Banner for called ticket */
-        .called-alert-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 1.5rem;
-            padding: 2rem;
-            box-sizing: border-box;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .called-alert-box {
-            background: var(--card-bg);
-            border: 2px solid var(--accent-green);
-            border-radius: 28px;
-            padding: 2.5rem 1.5rem;
-            width: 100%;
-            max-width: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(16, 185, 129, 0.2);
-            box-sizing: border-box;
-        }
-
-        .bell-animation {
-            width: 80px;
-            height: 80px;
-            background: rgba(16, 185, 129, 0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-green);
-            animation: ringBell 1s infinite alternate;
-        }
-
-        @keyframes ringBell {
-            0% { transform: rotate(-15deg); }
-            100% { transform: rotate(15deg); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .btn-lang {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.07) 100%);
-            color: var(--text-main);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 0.85rem 1.5rem;
-            font-weight: 700;
-            font-size: 1.15rem;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .translation-block {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            gap: 0.85rem;
+            gap: 0.35rem;
             width: 100%;
-            box-sizing: border-box;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .btn-lang:hover {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(59, 130, 246, 0.15) 100%);
-            border-color: rgba(59, 130, 246, 0.4);
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.2);
-            transform: translateY(-2px);
-            color: var(--text-main);
+        .translation-flag {
+            font-size: 1.4rem;
+            line-height: 1;
         }
 
-        .btn-lang:active {
-            transform: translateY(1px) scale(0.98);
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0.2) 100%);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        .translation-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            line-height: 1.4;
+            max-width: 320px;
+            text-align: center;
         }
 
-        @keyframes signalSearch {
-            0%, 100% { opacity: 0.25; }
-            50% { opacity: 1; }
-        }
-        
-        .sig-bar.searching:nth-child(1) { animation: signalSearch 1s infinite 0.0s; }
-        .sig-bar.searching:nth-child(2) { animation: signalSearch 1s infinite 0.2s; }
-        .sig-bar.searching:nth-child(3) { animation: signalSearch 1s infinite 0.4s; }
-        .sig-bar.searching:nth-child(4) { animation: signalSearch 1s infinite 0.6s; }
-
-        .btn-social {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        .translation-text.lang-ar {
+            font-family: sans-serif;
+            font-size: 1.25rem;
+            color: #60a5fa;
         }
 
-        .btn-social:hover {
-            background: rgba(255, 255, 255, 0.08) !important;
-            border-color: rgba(255, 255, 255, 0.15) !important;
-            transform: translateY(-2px);
+        /* Styles du Défilement Marquee */
+        .marquee-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-bottom: 1.5rem;
         }
 
-        .btn-social:active {
-            transform: translateY(1px) scale(0.98);
+        .marquee-container::before,
+        .marquee-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            width: 35px;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .marquee-container::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(30, 41, 59, 0.95), transparent);
+        }
+
+        .marquee-container::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(30, 41, 59, 0.95), transparent);
+        }
+
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 16s linear infinite;
+            color: #60a5fa;
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <!-- Header -->
-        <header style="padding-bottom: 1rem; margin-bottom: 0.5rem;">
-            <div class="logo-section" style="display: flex; align-items: center; gap: 0.75rem;">
+        <header style="padding-bottom: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: space-between; width: 100%; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
                 <img src="logo.png" alt="Logo GFM Assistance" style="height: 40px; width: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: white; padding: 2px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
                 <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
-                    <h1 style="font-size: 1.15rem; font-weight: 800; margin: 0; line-height: 1.1; letter-spacing: -0.01em; background: linear-gradient(to right, #ffffff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">GFM Assistance</h1>
-                    <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1px;">Administrative</span>
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <button id="btn-header-lang" onclick="showLanguageSelector()" style="background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.35); border-radius: 10px; height: 36px; padding: 0 0.6rem; display: none; align-items: center; justify-content: center; gap: 0.35rem; cursor: pointer; color: #60a5fa; font-weight: 700; box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15); transition: all 0.2s;">
-                    <i data-lucide="globe" style="width: 16px; height: 16px;"></i>
-                    <span id="header-lang-flag" style="font-size: 1.1rem; line-height: 1;">🇫🇷</span>
-                </button>
-                <div id="connection-status" style="font-size: 0.78rem; display: flex; align-items: center; gap: 0.45rem; font-weight: 600;">
-                    <div class="signal-bars" style="display: inline-flex; align-items: flex-end; gap: 2px; height: 12px; width: 16px;">
-                        <div class="sig-bar searching" style="width: 3px; height: 30%; background: var(--accent-orange); border-radius: 0.5px; transition: background 0.3s;"></div>
-                        <div class="sig-bar searching" style="width: 3px; height: 55%; background: var(--accent-orange); border-radius: 0.5px; transition: background 0.3s;"></div>
-                        <div class="sig-bar searching" style="width: 3px; height: 80%; background: var(--accent-orange); border-radius: 0.5px; transition: background 0.3s;"></div>
-                        <div class="sig-bar searching" style="width: 3px; height: 100%; background: var(--accent-orange); border-radius: 0.5px; transition: background 0.3s;"></div>
-                    </div>
-                    <span>Connexion...</span>
+                    <h1 style="line-height: 1.1; letter-spacing: -0.01em; background: linear-gradient(to right, #ffffff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">GFM Assistance</h1>
+                    <span style="font-size: 0.72rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1px;">Administrative</span>
                 </div>
             </div>
         </header>
 
-        <!-- Titre explicatif du service -->
-        <div id="page-title-container" style="text-align: center; margin: 0.5rem 0 0.5rem 0;">
-            <h2 id="page-title" style="font-size: 1.8rem; font-weight: 800; margin: 0; color: #f8fafc; letter-spacing: -0.019em;">Suivi de File d'Attente</h2>
-            <p id="page-subtitle" style="font-size: 1.2rem; color: #94a3b8; margin: 0.25rem 0 0 0; font-weight: 500;">Consultez votre position en temps réel sur votre smartphone</p>
-        </div>
-
-        <!-- Section Sélection de Langue Intégrée -->
-        <div id="language-selector-container" style="display: none; flex-direction: column; gap: 1rem; width: 100%; box-sizing: border-box;">
-            <!-- Intitulé multilingue dehors, centré en haut -->
-            <div style="text-align: center; margin-top: 0.5rem; margin-bottom: 0.25rem;">
-                <span style="font-size: 1.28rem; color: #cbd5e1; font-weight: 600; line-height: 1.4; display: block; word-break: break-word;">
-                    Choisissez votre langue / اختر لغتك / Choose your language / Elija su idioma / Escolha o seu idioma
-                </span>
-            </div>
-            
-            <!-- Carte contenant uniquement les boutons de langue -->
-            <div class="card" style="display: flex; flex-direction: column; gap: 0.8rem; width: 100%; padding: 1.5rem;">
-                <button class="btn-lang" onclick="setLanguage('fr')">
-                    <span>🇫🇷</span> <span>Français</span>
-                </button>
-                <button class="btn-lang" onclick="setLanguage('ar')" style="font-family: sans-serif;">
-                    <span>🇸🇦</span> <span>العربية</span>
-                </button>
-                <button class="btn-lang" onclick="setLanguage('en')">
-                    <span>🇬🇧</span> <span>English</span>
-                </button>
-                <button class="btn-lang" onclick="setLanguage('es')">
-                    <span>🇪🇸</span> <span>Español</span>
-                </button>
-                <button class="btn-lang" onclick="setLanguage('pt')">
-                    <span>🇵🇹</span> <span>Português</span>
-                </button>
-            </div>
-        </div>
-
-
-
-        <!-- Section Saisie Ticket si pas fourni dans l'URL -->
-        <div id="search-card" class="card" style="display: none;">
-            <h2 id="search-card-title" style="margin-top: 0; font-size: 1.1rem; font-weight: 700;">Suivre votre ticket</h2>
-            <p id="search-card-desc" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">Saisissez le numéro inscrit sur votre ticket pour suivre votre progression en direct.</p>
-            <div class="input-group">
-                <input type="text" id="ticket-input" placeholder="Ex: C003" autocomplete="off" autofocus>
-                <button class="btn-primary" id="btn-track">Valider</button>
-            </div>
-        </div>
-
-        <!-- Section Suivi Ticket Principal -->
-        <div id="tracker-card" class="card ticket-status-card" style="display: none;">
-            <span class="status-pill status-attente" id="ticket-status-pill">En attente</span>
-            
-            <h2 class="ticket-num-badge" id="ticket-number-display">---</h2>
-            
-            <div id="wait-message" style="color: var(--text-main); font-weight: 600; font-size: 1.1rem;">
-                Calcule de votre position...
-            </div>
-
-            <!-- Bouton Activation Notifications -->
-            <button class="notif-toggle-btn" id="btn-notification" style="display: none !important;">
-                <i data-lucide="bell" style="width: 18px; height: 18px;"></i>
-                <span id="notif-btn-text">Activer les alertes Push</span>
-            </button>
-
-            <!-- Indicateurs de file -->
-            <div class="progress-indicator">
-                <div class="progress-box">
-                    <span class="progress-val" id="queue-position-val">-</span>
-                    <span class="progress-lbl" id="people-ahead-label" style="font-size: 1.5rem; text-transform: none; letter-spacing: 0;">Personnes devant vous</span>
-                </div>
-                <div style="width: 1px; height: 40px; background: rgba(255,255,255,0.05); display: none;"></div>
-                <div class="progress-box" style="display: none;">
-                    <span class="progress-val" id="wait-time-val">-</span>
-                    <span class="progress-lbl">Attente est.</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section État des Guichets -->
-        <div class="card" style="display: none;">
-            <div class="live-guichets-title">
-                <i data-lucide="radio" style="color: var(--accent-blue); width: 18px; height: 18px;"></i>
-                <span>État des Guichets en direct</span>
-            </div>
-            <div class="guichets-grid" id="guichets-status-list">
-                <!-- Rempli en JS -->
-                <div class="guichet-row" style="justify-content: center; opacity: 0.5;">
-                    <span style="font-size: 0.9rem;">Aucun guichet connecté</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Section Réseaux Sociaux & Site Web -->
-        <div id="social-links-card" class="card" style="display: none; flex-direction: column; gap: 0.85rem; align-items: center; text-align: center; margin-top: 1rem; padding: 1.25rem;">
-            <span id="lbl-social-title" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Retrouvez-nous</span>
-            <div style="display: flex; gap: 0.8rem; width: 100%; justify-content: center;">
-                <a href="https://gfmassistance.fr" target="_blank" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.75rem 1rem; color: white; text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);" class="btn-social">
-                    <i data-lucide="globe" style="width: 18px; height: 18px; color: var(--accent-blue);"></i>
-                    <span id="lbl-website">Site Web</span>
-                </a>
-                <a href="https://www.tiktok.com/@gfm.assistance" target="_blank" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 0.75rem 1rem; color: white; text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);" class="btn-social">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #ff0050;">
-                        <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
-                    </svg>
-                    <span>TikTok</span>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Alerte Appel Plein Écran (Pour quand le client est actif sur la page) -->
-    <div id="called-fullscreen-overlay" class="called-alert-overlay" style="display: none;">
-        <div class="called-alert-box">
-            <div class="bell-animation">
-                <i data-lucide="bell-ring" style="width: 44px; height: 44px;"></i>
-            </div>
-            <h2 id="called-alert-title" style="font-size: 2.2rem; font-weight: 900; color: white; margin-top: 1.5rem; margin-bottom: 0.5rem;">C'est votre tour !</h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 1.5rem;" id="called-alert-text">Présentez-vous au Guichet X</p>
-            <button class="btn-primary" style="padding: 0.8rem 2rem; font-size: 1.1rem; width: 80%; border-radius: 16px;" id="btn-close-alert">J'y vais</button>
-        </div>
-    </div>
-
-    <!-- Audio pour le Ding-Dong local -->
-    <audio id="local-ding-dong" preload="auto">
-        <source src="/ding-dong.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Scripting et Socket.io -->
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script>
-        // Config de la passerelle de redirection (keyvalue.immanuel.co pour le self-healing)
-        const APP_KEY = "pn05bws8";
-        const REDIRECT_API_URL = `https://keyvalue.immanuel.co/api/KeyVal/GetValue/${APP_KEY}/active_url`;
-
-        let socket;
-        let trackedTicketNum = "";
-        let isReconnecting = false;
-        let pushSubscription = null;
-        let vapidPublicKey = "";
-        let audioUnlocked = false;
-        let currentLang = "fr";
-
-        // Détection automatique de la plateforme iOS
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-
-        const translations = {
-            fr: {
-                title: "Suivi de File d'Attente",
-                subtitle: "Consultez votre position en temps réel sur votre smartphone",
-                online: "En ligne",
-                reconnecting: "Connexion...",
-                trackTitle: "Suivre votre ticket",
-                trackDesc: "Saisissez le numéro inscrit sur votre ticket pour suivre votre progression en direct.",
-                trackPlaceholder: "Ex: C003",
-                trackButton: "Valider",
-                peopleAhead: "Personnes devant vous",
-                nextInLine: "Vous êtes le <strong>prochain</strong> ! Approchez-vous.",
-                ticketNotFound: "Ce ticket n'existe pas pour aujourd'hui.",
-                calledAlertTitle: "C'est votre tour !",
-                calledAlertButton: "J'y vais",
-                absentAlert: "⚠️ Vous avez été marqué <strong>Absent</strong>. Présentez-vous vite au guichet pour être rappelé !",
-                finishedAlert: "Votre passage est terminé. Merci de votre visite !",
-                calledMsg: (box) => `C'est votre tour ! Dirigez-vous vers le <strong>Guichet ${box}</strong>.`,
-                calledAlertMsg: (box) => `Présentez-vous au Guichet ${box}`,
-                ttsMsg: (num, box) => `Ticket numéro ${num}. Présentez-vous au Guichet ${box}.`,
-                ttsLang: 'fr-FR',
-                socialTitle: "Retrouvez-nous",
-                websiteLabel: "Site Web",
-                statusNames: {
-                    'En attente': 'En attente',
-                    'Appelé': 'Appelé',
-                    'En cours': 'En cours',
-                    'Absent': 'Absent',
-                    'Terminé': 'Terminé',
-                    'Annulé': 'Annulé',
-                    'Inexistant': 'Inexistant'
-                }
-            },
-            ar: {
-                title: "متابعة طابور الانتظار",
-                subtitle: "تابع ترتيبك مباشرة عبر هاتفك الذكي",
-                online: "متصل",
-                reconnecting: "اتصال...",
-                trackTitle: "تتبع تذكرتك",
-                trackDesc: "أدخل الرقم المكتوب على تذكرتك لمتابعة تقدمك مباشرة.",
-                trackPlaceholder: "مثال: C003",
-                trackButton: "تأكيد",
-                peopleAhead: "أشخاص أمامك",
-                nextInLine: "أنت <strong>التالي</strong>! يرجى الاقتراب.",
-                ticketNotFound: "هذه التذكرة غير موجودة اليوم.",
-                calledAlertTitle: "حان دورك!",
-                calledAlertButton: "أنا ذاهب",
-                absentAlert: "⚠️ تم تسجيلك <strong>غائبًا</strong>. يرجى التوجه بسرعة إلى المكتب ليتم استدعاؤك مجددًا!",
-                finishedAlert: "تمت خدمتكم بنجاح. شكراً لزيارتكم!",
-                calledMsg: (box) => `حان دورك! توجه إلى <strong>المكتب ${box}</strong>.`,
-                calledAlertMsg: (box) => `حان دورك! يرجى التوجه إلى المكتب ${box}`,
-                ttsMsg: (num, box) => `تذكرة رقم ${num}. يرجى التوجه إلى المكتب ${box}.`,
-                ttsLang: 'ar-SA',
-                socialTitle: "تابعونا على",
-                websiteLabel: "موقعنا",
-                statusNames: {
-                    'En attente': 'في الانتظار',
-                    'Appelé': 'تم الاتصال',
-                    'En cours': 'قيد الخدمة',
-                    'Absent': 'غائب',
-                    'Terminé': 'مكتمل',
-                    'Annulé': 'ملغى',
-                    'Inexistant': 'غير موجود'
-                }
-            },
-            en: {
-                title: "Queue Live Tracking",
-                subtitle: "Check your position in real-time on your smartphone",
-                online: "Online",
-                reconnecting: "Connecting...",
-                trackTitle: "Track your ticket",
-                trackDesc: "Enter the number on your ticket to track your live progress.",
-                trackPlaceholder: "E.g., C003",
-                trackButton: "Validate",
-                peopleAhead: "People ahead of you",
-                nextInLine: "You are <strong>next</strong>! Please come forward.",
-                ticketNotFound: "This ticket does not exist for today.",
-                calledAlertTitle: "It's your turn!",
-                calledAlertButton: "I'm going",
-                absentAlert: "⚠️ You were marked <strong>Absent</strong>. Please go to the counter quickly to be recalled!",
-                finishedAlert: "Your visit is complete. Thank you for visiting!",
-                calledMsg: (box) => `It's your turn! Please go to <strong>Counter ${box}</strong>.`,
-                calledAlertMsg: (box) => `Please go to Counter ${box}`,
-                ttsMsg: (num, box) => `Ticket number ${num}. Please go to Counter ${box}.`,
-                ttsLang: 'en-US',
-                socialTitle: "Follow us",
-                websiteLabel: "Website",
-                statusNames: {
-                    'En attente': 'Waiting',
-                    'Appelé': 'Called',
-                    'En cours': 'In progress',
-                    'Absent': 'Absent',
-                    'Terminé': 'Finished',
-                    'Annulé': 'Cancelled',
-                    'Inexistant': 'Non-existent'
-                }
-            },
-            es: {
-                title: "Seguimiento de Cola",
-                subtitle: "Consulte su position en tiempo real en su smartphone",
-                online: "En línea",
-                reconnecting: "Conectando...",
-                trackTitle: "Seguir su ticket",
-                trackDesc: "Ingrese el número de su ticket para seguir su progreso en vivo.",
-                trackPlaceholder: "Ej: C003",
-                trackButton: "Validar",
-                peopleAhead: "Personas delante de usted",
-                nextInLine: "¡Usted es el <strong>próximo</strong>! Acérquese.",
-                ticketNotFound: "Este ticket no existe para hoy.",
-                calledAlertTitle: "¡Es su turno!",
-                calledAlertButton: "Voy",
-                absentAlert: "⚠️ Ha sido marcado comme <strong>Ausente</strong>. ¡Vaya rápidamente a la ventanilla para ser llamado de nuevo!",
-                finishedAlert: "Su paso ha terminado. ¡Gracias por su visita!",
-                calledMsg: (box) => `¡Es su turno! Diríjase a la <strong>Ventanilla ${box}</strong>.`,
-                calledAlertMsg: (box) => `Preséntese en la Ventanilla ${box}`,
-                ttsMsg: (num, box) => `Ticket numéro ${num}. Preséntese en la Ventanilla ${box}.`,
-                ttsLang: 'es-ES',
-                socialTitle: "Síguenos",
-                websiteLabel: "Sitio Web",
-                statusNames: {
-                    'En attente': 'En espera',
-                    'Appelé': 'Llamado',
-                    'En cours': 'En curso',
-                    'Absent': 'Ausente',
-                    'Terminé': 'Finalizado',
-                    'Annulé': 'Cancelado',
-                    'Inexistant': 'Inexistente'
-                }
-            },
-            pt: {
-                title: "Acompanhamento de Fila",
-                subtitle: "Consulte a sua posição em tempo real no seu smartphone",
-                online: "Em linha",
-                reconnecting: "A ligar...",
-                trackTitle: "Seguir o seu bilhete",
-                trackDesc: "Insira o número do seu bilhete para acompanhar o seu progresso ao vivo.",
-                trackPlaceholder: "Ex: C003",
-                trackButton: "Validar",
-                peopleAhead: "Pessoas à sua frente",
-                nextInLine: "Você é o <strong>próximo</strong>! Aproxime-se.",
-                ticketNotFound: "Este bilhete não existe para hoje.",
-                calledAlertTitle: "É a sua vez!",
-                calledAlertButton: "Eu vou",
-                absentAlert: "⚠️ Foi marcado como <strong>Ausente</strong>. Dirija-se rapidamente ao balcão para ser chamado de novo!",
-                finishedAlert: "A sua visita terminou. Obrigado pela sua visita!",
-                calledMsg: (box) => `É a sua vez! Dirija-se ao <strong>Balcão ${box}</strong>.`,
-                calledAlertMsg: (box) => `Apresente-se no Balcão ${box}`,
-                ttsMsg: (num, box) => `Bilhete número ${num}. Apresente-se no Balcão ${box}.`,
-                ttsLang: 'pt-PT',
-                socialTitle: "Siga-nos",
-                websiteLabel: "Sítio Web",
-                statusNames: {
-                    'En attente': 'Em espera',
-                    'Appelé': 'Chamado',
-                    'En cours': 'Em curso',
-                    'Absent': 'Ausente',
-                    'Terminé': 'Concluído',
-                    'Annulé': 'Cancelado',
-                    'Inexistant': 'Inexistente'
-                }
-            }
-        };
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('user_lang', lang);
-            
-            // Masquer le choix des langues
-            document.getElementById('language-selector-container').style.display = 'none';
-            
-            // Afficher le titre principal
-            document.getElementById('page-title-container').style.display = 'block';
-            document.getElementById('page-title').style.display = 'block';
-
-            // Afficher le bouton de langue dans l'en-tête et mettre à jour le drapeau
-            const flags = { fr: "🇫🇷", ar: "🇸🇦", en: "🇬🇧", es: "🇪🇸", pt: "🇵🇹" };
-            document.getElementById('header-lang-flag').innerText = flags[lang] || "🇫🇷";
-            document.getElementById('btn-header-lang').style.display = 'flex';
-            
-            // Afficher la bonne carte (Saisie ou Suivi)
-            if (trackedTicketNum) {
-                showTrackerCard();
-                document.getElementById('search-card').style.display = 'none';
-            } else {
-                document.getElementById('search-card').style.display = 'block';
-                document.getElementById('tracker-card').style.display = 'none';
-            }
-            
-            // Afficher le bloc réseaux sociaux
-            const socialCard = document.getElementById('social-links-card');
-            if (socialCard) {
-                socialCard.style.display = 'flex';
-            }
-            
-            applyLanguage(lang);
-        }
-
-        function showLanguageSelector() {
-            // Masquer les autres cartes
-            document.getElementById('tracker-card').style.display = 'none';
-            document.getElementById('search-card').style.display = 'none';
-            document.getElementById('page-title-container').style.display = 'none';
-
-            // Masquer le bouton de langue dans l'en-tête pendant le choix de la langue
-            document.getElementById('btn-header-lang').style.display = 'none';
-            
-            // Masquer le bloc réseaux sociaux
-            const socialCard = document.getElementById('social-links-card');
-            if (socialCard) {
-                socialCard.style.display = 'none';
-            }
-            
-            // Afficher le choix des langues
-            document.getElementById('language-selector-container').style.display = 'flex';
-        }
-
-        function applyLanguage(lang) {
-            const t = translations[lang] || translations['fr'];
-            
-            // 1. Explanatory Header
-            document.getElementById('page-title').innerText = t.title;
-            const titleDiv = document.getElementById('page-title-container');
-            if (lang === 'ar') {
-                titleDiv.setAttribute('dir', 'rtl');
-                titleDiv.style.fontFamily = 'sans-serif';
-            } else {
-                titleDiv.setAttribute('dir', 'ltr');
-                titleDiv.style.fontFamily = '';
-            }
-            document.getElementById('page-subtitle').innerText = t.subtitle;
-
-            // 2. Search Card
-            document.getElementById('search-card-title').innerText = t.trackTitle;
-            document.getElementById('search-card-desc').innerText = t.trackDesc;
-            document.getElementById('ticket-input').placeholder = t.trackPlaceholder;
-            document.getElementById('btn-track').innerText = t.trackButton;
-
-            // 3. Progress Labels
-            const labelEl = document.getElementById('people-ahead-label');
-            labelEl.innerText = t.peopleAhead;
-            if (lang === 'ar') {
-                labelEl.setAttribute('dir', 'rtl');
-                labelEl.style.fontFamily = 'sans-serif';
-                labelEl.style.fontSize = '1.75rem';
-            } else {
-                labelEl.setAttribute('dir', 'ltr');
-                labelEl.style.fontFamily = '';
-                labelEl.style.fontSize = '1.5rem';
-            }
-
-            // 4. Called Alert Overlay
-            document.getElementById('called-alert-title').innerText = t.calledAlertTitle;
-            document.getElementById('btn-close-alert').innerText = t.calledAlertButton;
-
-            // 5. Social & Website Links
-            const socialTitle = document.getElementById('lbl-social-title');
-            const websiteLabel = document.getElementById('lbl-website');
-            if (socialTitle && websiteLabel) {
-                socialTitle.innerText = t.socialTitle || "Retrouvez-nous";
-                websiteLabel.innerText = t.websiteLabel || "Site Web";
-                if (lang === 'ar') {
-                    socialTitle.parentElement.setAttribute('dir', 'rtl');
-                    socialTitle.parentElement.style.fontFamily = 'sans-serif';
-                } else {
-                    socialTitle.parentElement.setAttribute('dir', 'ltr');
-                    socialTitle.parentElement.style.fontFamily = '';
-                }
-            }
-
-            // Trigger UI state refresh to update active messages
-            updateUIState();
-
-            // Trigger connection status text refresh in the new language
-            if (socket) {
-                updateConnectionStatus(socket.connected);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
-            
-            // 1. Récupérer le ticket depuis l'URL si présent
-            const urlParams = new URLSearchParams(window.location.search);
-            const ticketParam = urlParams.get('t') || urlParams.get('ticket');
-            
-            if (ticketParam) {
-                trackedTicketNum = ticketParam.toUpperCase().trim();
-            }
-            
-            // 2. Initialiser ou demander la langue
-            const savedLang = localStorage.getItem('user_lang');
-            if (!savedLang) {
-                showLanguageSelector();
-            } else {
-                setLanguage(savedLang);
-            }
-
-            // Bindings bouton recherche
-            document.getElementById('btn-track').addEventListener('click', trackFromInput);
-            document.getElementById('ticket-input').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') trackFromInput();
-            });
-
-            // Bouton notification
-            document.getElementById('btn-notification').addEventListener('click', requestPushPermission);
-
-            // Bouton fermer l'alerte
-            document.getElementById('btn-close-alert').addEventListener('click', () => {
-                document.getElementById('called-fullscreen-overlay').style.display = 'none';
-            });
-
-            // Essayer d'initialiser Socket.IO
-            initSocketIO();
-
-            // S'enregistrer au Service Worker
-            initServiceWorker();
-        });
-
-        function trackFromInput() {
-            const inputVal = document.getElementById('ticket-input').value.toUpperCase().trim();
-            if (inputVal) {
-                trackedTicketNum = inputVal;
-                // Mettre à jour l'URL sans recharger la page
-                const newUrl = `${window.location.pathname}?t=${trackedTicketNum}`;
-                window.history.pushState({ path: newUrl }, '', newUrl);
+        <!-- Centered Loader Card -->
+        <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; flex-grow: 1; width: 100%;">
+            <div class="loader-card" id="card">
+                <div class="spinner" id="spinner"></div>
+                <h2 id="title" style="font-size: 1.5rem; font-weight: 800; margin: 0; text-align: center;">Connexion à la file d'attente</h2>
+                <p id="message">Recherche du serveur en cours, veuillez patienter...</p>
                 
-                document.getElementById('search-card').style.display = 'none';
-                showTrackerCard();
-                updateUIState();
-            }
-        }
-
-        function showTrackerCard() {
-            document.getElementById('tracker-card').style.display = 'flex';
-            document.getElementById('ticket-number-display').innerText = trackedTicketNum;
-        }
-
-        function initSocketIO() {
-            socket = io();
-
-            socket.on('connect', () => {
-                isReconnecting = false;
-                updateConnectionStatus(true);
-            });
-
-            socket.on('disconnect', () => {
-                updateConnectionStatus(false, "Reconnexion...");
-                checkForRedirectUpdate(); // Lancer la logique de self-healing
-            });
-
-            socket.on('connect_error', () => {
-                updateConnectionStatus(false, "Reconnexion...");
-                checkForRedirectUpdate(); // Lancer la logique de self-healing
-            });
-
-            socket.on('state_update', (data) => {
-                window.globalTickets = data.tickets || [];
-                window.globalSettings = data.settings || {};
-                window.activeBoxes = data.active_boxes || [];
-                
-                updateUIState();
-            });
-
-            socket.on('nouvel_appel', (data) => {
-                // Alerte en local si la page est restée au premier plan
-                if (data && data.ticket && data.ticket.numero === trackedTicketNum) {
-                    playLocalAnnouncement(data.ticket);
-                }
-            });
-        }
-
-        function updateConnectionStatus(isConnected, customText = "") {
-            const statusDiv = document.getElementById('connection-status');
-            if (!statusDiv) return;
-            const bars = statusDiv.querySelectorAll('.sig-bar');
-            const txt = statusDiv.querySelector('span:last-child');
-            
-            const t = translations[currentLang] || translations['fr'];
-            const color = isConnected ? 'var(--accent-green)' : 'var(--accent-red)';
-            
-            bars.forEach(bar => {
-                bar.style.background = color;
-                if (isConnected) {
-                    bar.classList.remove('searching');
-                    bar.style.animation = 'none';
-                    bar.style.opacity = '1';
-                } else {
-                    bar.classList.add('searching');
-                    bar.style.opacity = ''; // let animation control it
-                }
-            });
-            
-            if (customText) {
-                txt.innerText = (customText === "Reconnexion..." || customText === "Connexion...") ? (t.reconnecting || "Connexion...") : customText;
-            } else {
-                txt.innerText = isConnected ? (t.online || "En ligne") : (t.reconnecting || "Connexion...");
-            }
-        }
-
-        // --- Logique de Self-Healing (Reconnexion invisible après redémarrage serveur) ---
-        async function checkForRedirectUpdate() {
-            if (isReconnecting) return;
-            isReconnecting = true;
-
-            let checkCount = 0;
-            const maxChecks = 5;
-
-            const checkInterval = setInterval(async () => {
-                checkCount++;
-                if (socket.connected) {
-                    clearInterval(checkInterval);
-                    isReconnecting = false;
-                    return;
-                }
-
-                try {
-                    // Aller chercher l'URL active du jour
-                    const res = await fetch(REDIRECT_API_URL);
-                    if (res.ok) {
-                        const rawText = await res.text();
-                        let newUrl = "";
-                        if (rawText && rawText.trim() !== "" && rawText.trim() !== '""') {
-                            const base64Str = JSON.parse(rawText).trim();
-                            if (base64Str) {
-                                // Décodage Base64 URL-safe
-                                let base64 = base64Str.replace(/-/g, '+').replace(/_/g, '/');
-                                while (base64.length % 4) {
-                                    base64 += '=';
-                                }
-                                newUrl = atob(base64);
-                            }
-                        }
-                        // Si l'URL a changé par rapport à notre site actuel
-                        if (newUrl && newUrl.startsWith('http') && !newUrl.includes(window.location.host)) {
-                            clearInterval(checkInterval);
-                            // Rediriger le client vers le nouveau tunnel
-                            window.location.href = `${newUrl}/mobile.html?t=${trackedTicketNum}`;
-                        }
-                    }
-                } catch (e) {
-                    console.log("Erreur lors de la vérification de la passerelle de secours :", e);
-                }
-
-                if (checkCount >= maxChecks) {
-                    clearInterval(checkInterval);
-                    isReconnecting = false;
-                }
-            }, 3000);
-        }
-
-        function updateUIState() {
-            if (!window.globalTickets) return;
-
-            // 1. Rechercher notre ticket
-            const myTicket = window.globalTickets.find(t => t.numero === trackedTicketNum);
-            
-            // 2. Mettre à jour l'affichage des Guichets connectés
-            updateGuichetsGrid();
-
-            const statusPill = document.getElementById('ticket-status-pill');
-            const waitMsg = document.getElementById('wait-message');
-            const queuePosVal = document.getElementById('queue-position-val');
-            const waitTimeVal = document.getElementById('wait-time-val');
-
-            const t = translations[currentLang] || translations['fr'];
-
-            if (!myTicket) {
-                statusPill.className = "status-pill status-termine";
-                statusPill.innerText = t.statusNames['Inexistant'] || "Inexistant";
-                waitMsg.innerText = t.ticketNotFound;
-                queuePosVal.innerText = "-";
-                waitTimeVal.innerText = "-";
-                return;
-            }
-
-            // Appliquer le statut visuel traduit
-            statusPill.innerText = t.statusNames[myTicket.status] || myTicket.status;
-            if (currentLang === 'ar') {
-                statusPill.style.fontFamily = 'sans-serif';
-            } else {
-                statusPill.style.fontFamily = '';
-            }
-            
-            if (myTicket.status === 'En attente') {
-                statusPill.className = "status-pill status-attente";
-                
-                // Calculer la position en filtrant les tickets "En attente" avant nous
-                const waitingList = window.globalTickets.filter(t => t.status === 'En attente');
-                
-                // Ordre de priorité de call_next
-                const priorityOrder = {
-                    'Urgence Absolue': 1,
-                    'RDV': 2,
-                    'Prioritaire': 3,
-                    'Prioritaire Handicapé': 3,
-                    'Classique': 4,
-                    'Normal': 4
-                };
-
-                // Trier pour reproduire la logique d'appel
-                waitingList.sort((a, b) => {
-                    const pA = a.transfert_time_iso ? 1.5 : (priorityOrder[a.type] || 5);
-                    const pB = b.transfert_time_iso ? 1.5 : (priorityOrder[b.type] || 5);
-                    if (pA !== pB) return pA - pB;
-                    return a.id - b.id; // Plus petit ID d'abord (plus ancien)
-                });
-
-                const myIndex = waitingList.findIndex(t => t.id === myTicket.id);
-                const peopleBefore = myIndex >= 0 ? myIndex : waitingList.length;
-
-                queuePosVal.innerText = peopleBefore;
-                
-                // Temps estimé (ex: 4 minutes par personne, avec un minimum de 2 min)
-                const minutesPerPerson = 4;
-                const totalMinutes = Math.max(2, peopleBefore * minutesPerPerson);
-                waitTimeVal.innerText = `~${totalMinutes} min`;
-
-                if (peopleBefore === 0) {
-                    waitMsg.innerHTML = t.nextInLine;
-                } else {
-                    waitMsg.innerHTML = "";
-                }
-
-            } else if (myTicket.status === 'Appelé' || myTicket.status === 'En cours') {
-                statusPill.className = "status-pill status-appel";
-                waitMsg.innerHTML = t.calledMsg(myTicket.box_appel || '');
-                queuePosVal.innerText = "0";
-                waitTimeVal.innerText = "0";
-
-            } else if (myTicket.status === 'Absent') {
-                statusPill.className = "status-pill status-absent";
-                waitMsg.innerHTML = t.absentAlert;
-                queuePosVal.innerText = "-";
-                waitTimeVal.innerText = "-";
-
-            } else if (myTicket.status === 'Terminé') {
-                statusPill.className = "status-pill status-termine";
-                waitMsg.innerHTML = t.finishedAlert;
-                queuePosVal.innerText = "-";
-                waitTimeVal.innerText = "-";
-            }
-        }
-
-        function updateGuichetsGrid() {
-            const container = document.getElementById('guichets-status-list');
-            container.innerHTML = '';
-
-            const guichetLabel = (window.globalSettings && window.globalSettings.TV_Texte_Guichet) || "Guichet";
-            const boxes = window.activeBoxes || [];
-
-            if (boxes.length === 0) {
-                container.innerHTML = `
-                    <div class="guichet-row" style="justify-content: center; opacity: 0.5;">
-                        <span style="font-size: 0.9rem;">Aucun guichet actif pour le moment</span>
+                <!-- Message de chargement multilingue empilé -->
+                <div id="loading-multilingual" style="display: none; text-align: center; margin-top: 1rem; width: 100%;">
+                    <!-- Défilement Marquee "Chargement en cours" dans toutes les langues -->
+                    <div class="marquee-container">
+                        <div class="marquee-content">
+                            Chargement en cours... • <span dir="rtl" style="font-family: sans-serif;">جاري التحميل...</span> • Loading... • Cargando... • Carregando... • &nbsp;
+                            Chargement en cours... • <span dir="rtl" style="font-family: sans-serif;">جاري التحميل...</span> • Loading... • Cargando... • Carregando... • &nbsp;
+                        </div>
                     </div>
-                `;
-                return;
-            }
-
-            // Trier les guichets de 1 à 4
-            const sortedBoxes = [...new Set(boxes.map(Number))].sort((a,b) => a - b);
-
-            sortedBoxes.forEach(g => {
-                // Trouver le ticket actif
-                const activeTicket = window.globalTickets.find(t => 
-                    (t.status === 'Appelé' || t.status === 'En cours') && 
-                    Number(t.box_appel) === g
-                );
-
-                if (activeTicket) {
-                    container.innerHTML += `
-                        <div class="guichet-row">
-                            <span class="guichet-name">${guichetLabel} ${g}</span>
-                            <span class="guichet-ticket active">${activeTicket.numero}</span>
-                        </div>
-                    `;
-                } else {
-                    container.innerHTML += `
-                        <div class="guichet-row">
-                            <span class="guichet-name" style="opacity: 0.65;">${guichetLabel} ${g}</span>
-                            <span class="guichet-status-lbl" style="color: var(--text-muted);">Ouvert</span>
-                        </div>
-                    `;
-                }
-            });
-        }
-
-        // --- Logique Audio en Premier Plan ---
-        function playLocalAnnouncement(ticket) {
-            // Débloquer le son et jouer l'annonce si l'utilisateur a déjà interagi
-            if (!audioUnlocked) return;
-
-            const t = translations[currentLang] || translations['fr'];
-
-            const dingDong = document.getElementById('local-ding-dong');
-            dingDong.currentTime = 0;
-            dingDong.play().then(() => {
-                // Après le ding-dong, lancer la voix locale
-                setTimeout(() => {
-                    const text = t.ttsMsg(ticket.numero, ticket.box_appel);
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = t.ttsLang;
-                    window.speechSynthesis.speak(utterance);
-                }, 1000);
-            }).catch(e => console.log("Son bloqué localement :", e));
-
-            // Afficher la popup plein écran
-            const overlay = document.getElementById('called-fullscreen-overlay');
-            const alertText = document.getElementById('called-alert-text');
-            alertText.innerHTML = t.calledAlertMsg(ticket.box_appel);
-            overlay.style.display = 'flex';
-
-            // Vibration locale du smartphone
-            if ('vibrate' in navigator) {
-                navigator.vibrate([300, 100, 300, 100, 300]);
-            }
-        }
-
-        // --- Logique Service Worker & Push Notifications ---
-        async function initServiceWorker() {
-            if ('serviceWorker' in navigator && 'PushManager' in window) {
-                try {
-                    const registration = await navigator.serviceWorker.register('/sw.js');
-                    console.log('Service Worker enregistré avec succès:', registration);
                     
-                    // Vérifier si un abonnement existe déjà
-                    const sub = await registration.pushManager.getSubscription();
-                    if (sub) {
-                        pushSubscription = sub;
-                        setNotifButtonState(true);
-                    }
-                } catch (error) {
-                    console.error('Échec enregistrement du Service Worker:', error);
-                }
-            } else {
-                // Cacher le bouton si les notifications ne sont pas supportées
-                document.getElementById('btn-notification').style.display = 'none';
-            }
+                    <!-- Traduction des consignes empilées -->
+                    <div class="translation-list" style="display: flex; flex-direction: column; gap: 1.25rem; width: 100%;">
+                        <div class="translation-block">
+                            <span class="translation-flag">🇫🇷</span>
+                            <span class="translation-text">Consultez votre position en temps réel sur votre smartphone</span>
+                        </div>
+                        <div class="translation-block" dir="rtl">
+                            <span class="translation-flag">🇸🇦</span>
+                            <span class="translation-text lang-ar">تابع ترتيبك مباشرة عبر هاتفك الذكي</span>
+                        </div>
+                        <div class="translation-block">
+                            <span class="translation-flag">🇬🇧</span>
+                            <span class="translation-text">Check your position in real-time on your smartphone</span>
+                        </div>
+                        <div class="translation-block">
+                            <span class="translation-flag">🇪🇸</span>
+                            <span class="translation-text">Consulte su posición en tiempo real en su smartphone</span>
+                        </div>
+                        <div class="translation-block">
+                            <span class="translation-flag">🇵🇹</span>
+                            <span class="translation-text">Consulte a sua posição em tempo real no seu smartphone</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-retry" id="btn-retry" onclick="checkServer()">Réessayer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration de notre passerelle de redirection unique
+        const APP_KEY = "pn05bws8";
+        const API_URL = `https://keyvalue.immanuel.co/api/KeyVal/GetValue/${APP_KEY}/active_url`;
+
+        function getParameterByName(name) {
+            const url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        async function requestPushPermission() {
-            // Débloquer le son au passage sur clic
-            audioUnlocked = true;
+        function startMultilingualLoading(redirectUrl) {
+            const container = document.getElementById('loading-multilingual');
+            container.style.display = 'block';
 
-            const permission = await Notification.requestPermission();
-            if (permission !== 'granted') {
-                alert("Vous devez autoriser les notifications pour recevoir les alertes.");
-                return;
-            }
+            // Redirection après 4.5 secondes pour laisser le temps de lire les consignes
+            // Utilisation de location.replace pour ne pas polluer l'historique de retour
+            setTimeout(() => {
+                window.location.replace(redirectUrl);
+            }, 4500);
+        }
 
-            // Récupérer la clé publique VAPID depuis le serveur
+        async function checkServer() {
+            const spinner = document.getElementById('spinner');
+            const title = document.getElementById('title');
+            const message = document.getElementById('message');
+            const btn = document.getElementById('btn-retry');
+
+            spinner.style.display = 'block';
+            btn.style.display = 'none';
+            title.style.display = 'block';
+            message.style.display = 'block';
+            document.getElementById('loading-multilingual').style.display = 'none';
+            title.innerText = "Connexion à la file d'attente";
+            message.innerText = "Recherche du serveur en cours, veuillez patienter...";
+
             try {
-                const response = await fetch('/api/vapid_public_key');
-                const data = await response.json();
-                vapidPublicKey = data.public_key;
-
-                // S'abonner via le PushManager
-                const registration = await navigator.serviceWorker.ready;
-                const convertedKey = urlBase64ToUint8Array(vapidPublicKey);
-                
-                const subscription = await registration.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: convertedKey
+                // Requête HTTP GET vers la passerelle de secours
+                const response = await fetch(API_URL + "?cache_bust=" + Date.now(), {
+                    cache: "no-store"
                 });
 
-                pushSubscription = subscription;
+                if (!response.ok) {
+                    throw new Error("Impossible de joindre la passerelle. Code: " + response.status);
+                }
+
+                const rawText = await response.text();
+                let targetUrl = "";
                 
-                // Envoyer l'abonnement au serveur local
-                await saveSubscriptionOnServer(subscription);
+                if (rawText && rawText.trim() !== "" && rawText.trim() !== '""') {
+                    const base64Str = JSON.parse(rawText).trim();
+                    if (base64Str) {
+                        // Décodage Base64 URL-safe
+                        let base64 = base64Str.replace(/-/g, '+').replace(/_/g, '/');
+                        while (base64.length % 4) {
+                            base64 += '=';
+                        }
+                        targetUrl = atob(base64);
+                    }
+                }
 
-                setNotifButtonState(true);
-                
-                // Petit test sonore local pour valider l'accès
-                const dingDong = document.getElementById('local-ding-dong');
-                dingDong.volume = 0.5;
-                dingDong.play().catch(e => {});
+                if (targetUrl && targetUrl.startsWith('http')) {
+                    // Récupérer le paramètre ticket 't' ou 'ticket' s'il existe
+                    const ticket = getParameterByName('t') || getParameterByName('ticket');
+                    const code = getParameterByName('c') || getParameterByName('code');
+                    let redirectUrl = `${targetUrl}/mobile.html`;
+                    
+                    const params = [];
+                    if (ticket) params.push(`t=${encodeURIComponent(ticket)}`);
+                    if (code) params.push(`c=${encodeURIComponent(code)}`);
+                    if (params.length > 0) {
+                        redirectUrl += `?${params.join('&')}`;
+                    }
 
-                alert("Alertes activées avec succès ! Vous recevrez une notification quand votre tour arrivera.");
+                    // Masquer le titre et le message en français
+                    title.style.display = 'none';
+                    message.style.display = 'none';
 
+                    // Lancer la séquence d'affichage des langues en fondu
+                    startMultilingualLoading(redirectUrl);
+                } else {
+                    // Pas de lien actif stocké (le serveur est éteint)
+                    showOfflineMessage("Le service est fermé", "La file d'attente est actuellement hors ligne. Veuillez vous assurer du lancement de l'application en présentiel.");
+                }
             } catch (error) {
-                console.error("Erreur lors de l'activation des alertes :", error);
-                alert("Erreur lors de l'activation : " + error.message);
+                console.error("Erreur de passerelle :", error);
+                showOfflineMessage("Erreur de connexion", "Impossible de joindre le serveur de redirection. Vérifiez votre connexion internet.");
             }
         }
 
-        async function saveSubscriptionOnServer(subscription) {
-            if (!trackedTicketNum) return;
-
-            const res = await fetch(`/api/tickets/${trackedTicketNum}/subscribe`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(subscription)
-            });
-
-            if (!res.ok) {
-                throw new Error("Impossible d'enregistrer l'abonnement sur le serveur.");
-            }
+        function showOfflineMessage(errTitle, errText) {
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('title').style.display = 'block';
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('title').innerText = errTitle;
+            document.getElementById('message').innerText = errText;
+            document.getElementById('loading-multilingual').style.display = 'none';
+            document.getElementById('btn-retry').style.display = 'inline-block';
         }
 
-        function setNotifButtonState(isSubscribed) {
-            const btn = document.getElementById('btn-notification');
-            const txt = document.getElementById('notif-btn-text');
-            const icon = btn.querySelector('i');
-
-            if (isSubscribed) {
-                btn.className = "notif-toggle-btn subscribed";
-                txt.innerText = "Alertes activées !";
-                if (icon) icon.setAttribute('data-lucide', 'bell-ring');
-            } else {
-                btn.className = "notif-toggle-btn";
-                txt.innerText = "Activer les alertes Push";
-                if (icon) icon.setAttribute('data-lucide', 'bell');
-            }
-            lucide.createIcons();
-        }
-
-        // Utilitaires de conversion pour VAPID Key
-        function urlBase64ToUint8Array(base64String) {
-            const padding = '='.repeat((4 - base64String.length % 4) % 4);
-            const base64 = (base64String + padding)
-                .replace(/\-/g, '+')
-                .replace(/_/g, '/');
-
-            const rawData = window.atob(base64);
-            const outputArray = new Uint8Array(rawData.length);
-
-            for (let i = 0; i < rawData.length; ++i) {
-                outputArray[i] = rawData.charCodeAt(i);
-            }
-            return outputArray;
-        }
+        // Lancer la vérification dès le chargement de la page
+        window.onload = checkServer;
     </script>
 </body>
 </html>
