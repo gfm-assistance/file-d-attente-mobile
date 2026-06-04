@@ -84,9 +84,28 @@
 </head>
 <body>
     <div class="loader-card" id="card">
+        <!-- Logo et nom GFM permanent -->
+        <div style="display: flex; align-items: center; gap: 0.75rem; justify-content: center; width: 100%; margin-bottom: 0.5rem;">
+            <img src="logo.png" alt="Logo GFM Assistance" style="height: 40px; width: auto; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: white; padding: 2px;">
+            <div style="display: flex; flex-direction: column; align-items: flex-start; text-align: left;">
+                <span style="font-size: 1.15rem; font-weight: 800; color: white; line-height: 1.1;">GFM Assistance</span>
+                <span style="font-size: 0.72rem; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 1px;">Administrative</span>
+            </div>
+        </div>
+        
+        <div style="width: 100%; height: 1px; background: rgba(255, 255, 255, 0.08); margin-bottom: 0.5rem;"></div>
+
         <div class="spinner" id="spinner"></div>
         <h1 id="title">Connexion à la file d'attente</h1>
         <p id="message">Recherche du serveur en cours, veuillez patienter...</p>
+        
+        <!-- Nouveau message de chargement multilingue -->
+        <div id="loading-multilingual" style="display: none; text-align: center; margin-top: 0.5rem; width: 100%;">
+            <p style="font-size: 0.85rem; color: #cbd5e1; font-weight: 500; line-height: 1.5; word-break: break-word; margin: 0;">
+                Consultez votre position en temps réel sur votre smartphone / تابع ترتيبك مباشرة عبر هاتفك الذكي / Check your position in real-time on your smartphone / Consulte su posición en tiempo real en su smartphone / Consulte a sua posição em tempo real no seu smartphone
+            </p>
+        </div>
+
         <button class="btn-retry" id="btn-retry" onclick="checkServer()">Réessayer</button>
     </div>
 
@@ -113,6 +132,9 @@
 
             spinner.style.display = 'block';
             btn.style.display = 'none';
+            title.style.display = 'block';
+            message.style.display = 'block';
+            document.getElementById('loading-multilingual').style.display = 'none';
             title.innerText = "Connexion à la file d'attente";
             message.innerText = "Recherche du serveur en cours, veuillez patienter...";
 
@@ -150,11 +172,19 @@
                         redirectUrl += `?t=${encodeURIComponent(ticket)}`;
                     }
 
-                    // Redirection immédiate
-                    message.innerText = "Serveur trouvé ! Redirection...";
-                    window.location.href = redirectUrl;
+                    // Masquer le titre et le message en français
+                    title.style.display = 'none';
+                    message.style.display = 'none';
+
+                    // Afficher uniquement le message de redirection multilingue
+                    document.getElementById('loading-multilingual').style.display = 'block';
+
+                    // Délai de 1.8 seconde avant la redirection réelle
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 1800);
                 } else {
-                    // Pas de lien actif stocké (le serveur éteint)
+                    // Pas de lien actif stocké (le serveur est éteint)
                     showOfflineMessage("Le service est fermé", "La file d'attente est actuellement hors ligne. Veuillez vous assurer du lancement de l'application en présentiel.");
                 }
             } catch (error) {
@@ -165,8 +195,11 @@
 
         function showOfflineMessage(errTitle, errText) {
             document.getElementById('spinner').style.display = 'none';
+            document.getElementById('title').style.display = 'block';
+            document.getElementById('message').style.display = 'block';
             document.getElementById('title').innerText = errTitle;
             document.getElementById('message').innerText = errText;
+            document.getElementById('loading-multilingual').style.display = 'none';
             document.getElementById('btn-retry').style.display = 'inline-block';
         }
 
