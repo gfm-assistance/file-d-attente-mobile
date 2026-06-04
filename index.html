@@ -91,9 +91,9 @@
     </div>
 
     <script>
-        // Le bucket de notre passerelle de redirection unique
-        const BUCKET = "gfmad_queue_attente_bd6fc026";
-        const API_URL = `https://kvdb.io/${BUCKET}/active_url`;
+        // Configuration de notre passerelle de redirection unique
+        const APP_KEY = "pn05bws8";
+        const API_URL = `https://keyvalue.immanuel.co/api/KeyVal/GetValue/${APP_KEY}/active_url`;
 
         function getParameterByName(name) {
             const url = window.location.href;
@@ -117,16 +117,29 @@
             message.innerText = "Recherche du serveur en cours, veuillez patienter...";
 
             try {
-                // Requête HTTP GET vers kvdb.io pour récupérer l'adresse tunnel active
+                // Requête HTTP GET vers la passerelle de secours
                 const response = await fetch(API_URL + "?cache_bust=" + Date.now(), {
                     cache: "no-store"
                 });
 
                 if (!response.ok) {
-                    throw new Error("Impossible de joindre la passerelle.");
+                    throw new Error("Impossible de joindre la passerelle. Code: " + response.status);
                 }
 
-                const targetUrl = (await response.text()).trim();
+                const rawText = await response.text();
+                let targetUrl = "";
+                
+                if (rawText && rawText.trim() !== "" && rawText.trim() !== '""') {
+                    const base64Str = JSON.parse(rawText).trim();
+                    if (base64Str) {
+                        // Décodage Base64 URL-safe
+                        let base64 = base64Str.replace(/-/g, '+').replace(/_/g, '/');
+                        while (base64.length % 4) {
+                            base64 += '=';
+                        }
+                        targetUrl = atob(base64);
+                    }
+                }
 
                 if (targetUrl && targetUrl.startsWith('http')) {
                     // Récupérer le paramètre ticket 't' ou 'ticket' s'il existe
@@ -141,7 +154,7 @@
                     message.innerText = "Serveur trouvé ! Redirection...";
                     window.location.href = redirectUrl;
                 } else {
-                    // Pas de lien actif stocké (le serveur est éteint)
+                    // Pas de lien actif stocké (le serveur éteint)
                     showOfflineMessage("Le service est fermé", "La file d'attente est actuellement hors ligne. Veuillez vous assurer du lancement de l'application en présentiel.");
                 }
             } catch (error) {
