@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accès File d'Attente</title>
+    <!-- Google Font Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+            color: #f8fafc;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .loader-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 2.5rem 2rem;
+            max-width: 400px;
+            width: 90%;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        p {
+            color: #94a3b8;
+            font-size: 1rem;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .btn-retry {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-card" id="card">
+        <div class="spinner" id="spinner"></div>
+        <h1 id="title">Connexion à la file d'attente</h1>
+        <p id="message">Recherche du serveur en cours, veuillez patienter...</p>
+        <button class="btn-retry" id="btn-retry" onclick="checkServer()">Réessayer</button>
+    </div>
+
+    <script>
+        // Le bucket de notre passerelle de redirection unique
+        const BUCKET = "gfmad_queue_attente_bd6fc026";
+        const API_URL = `https://kvdb.io/${BUCKET}/active_url`;
+
+        function getParameterByName(name) {
+            const url = window.location.href;
+            name = name.replace(/[\[\]]/g, '\\$&');
+            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+            const results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        }
+
+        async function checkServer() {
+            const spinner = document.getElementById('spinner');
+            const title = document.getElementById('title');
+            const message = document.getElementById('message');
+            const btn = document.getElementById('btn-retry');
+
+            spinner.style.display = 'block';
+            btn.style.display = 'none';
+            title.innerText = "Connexion à la file d'attente";
+            message.innerText = "Recherche du serveur en cours, veuillez patienter...";
+
+            try {
+                // Requête HTTP GET vers kvdb.io pour récupérer l'adresse tunnel active
+                const response = await fetch(API_URL + "?cache_bust=" + Date.now(), {
+                    cache: "no-store"
+                });
+
+                if (!response.ok) {
+                    throw new Error("Impossible de joindre la passerelle.");
+                }
+
+                const targetUrl = (await response.text()).trim();
+
+                if (targetUrl && targetUrl.startsWith('http')) {
+                    // Récupérer le paramètre ticket 't' ou 'ticket' s'il existe
+                    const ticket = getParameterByName('t') || getParameterByName('ticket');
+                    let redirectUrl = `${targetUrl}/mobile.html`;
+                    
+                    if (ticket) {
+                        redirectUrl += `?t=${encodeURIComponent(ticket)}`;
+                    }
+
+                    // Redirection immédiate
+                    message.innerText = "Serveur trouvé ! Redirection...";
+                    window.location.href = redirectUrl;
+                } else {
+                    // Pas de lien actif stocké (le serveur est éteint)
+                    showOfflineMessage("Le service est fermé", "La file d'attente est actuellement hors ligne. Veuillez vous assurer du lancement de l'application en présentiel.");
+                }
+            } catch (error) {
+                console.error("Erreur de passerelle :", error);
+                showOfflineMessage("Erreur de connexion", "Impossible de joindre le serveur de redirection. Vérifiez votre connexion internet.");
+            }
+        }
+
+        function showOfflineMessage(errTitle, errText) {
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('title').innerText = errTitle;
+            document.getElementById('message').innerText = errText;
+            document.getElementById('btn-retry').style.display = 'inline-block';
+        }
+
+        // Lancer la vérification dès le chargement de la page
+        window.onload = checkServer;
+    </script>
+</body>
+</html>
