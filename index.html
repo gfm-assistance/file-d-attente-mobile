@@ -226,7 +226,7 @@
                         </div>
                         <div class="translation-block">
                             <span class="translation-flag">🇪🇸</span>
-                            <span class="translation-text">Consulte su posición en tiempo real en su smartphone</span>
+                            <span class="translation-text">Consulte su posición en tempo real en su smartphone</span>
                         </div>
                         <div class="translation-block">
                             <span class="translation-flag">🇵🇹</span>
@@ -308,10 +308,14 @@
                 if (targetUrl && targetUrl.startsWith('http')) {
                     // Récupérer le paramètre ticket 't' ou 'ticket' s'il existe
                     const ticket = getParameterByName('t') || getParameterByName('ticket');
+                    const code = getParameterByName('c') || getParameterByName('code');
                     let redirectUrl = `${targetUrl}/mobile.html`;
                     
-                    if (ticket) {
-                        redirectUrl += `?t=${encodeURIComponent(ticket)}`;
+                    const params = [];
+                    if (ticket) params.push(`t=${encodeURIComponent(ticket)}`);
+                    if (code) params.push(`c=${encodeURIComponent(code)}`);
+                    if (params.length > 0) {
+                        redirectUrl += `?${params.join('&')}`;
                     }
 
                     // Masquer le titre et le message en français
