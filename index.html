@@ -226,7 +226,7 @@
                         </div>
                         <div class="translation-block">
                             <span class="translation-flag">🇪🇸</span>
-                            <span class="translation-text">Consulte su posición en tempo real en su smartphone</span>
+                            <span class="translation-text">Consulte su posición en tiempo real en su smartphone</span>
                         </div>
                         <div class="translation-block">
                             <span class="translation-flag">🇵🇹</span>
@@ -322,8 +322,13 @@
                     title.style.display = 'none';
                     message.style.display = 'none';
 
-                    // Lancer la séquence d'affichage des langues en fondu
-                    startMultilingualLoading(redirectUrl);
+                    // Si c'est pour le récapitulatif administrateur, redirection immédiate (pas de chargement fictif)
+                    if (ticket && (ticket.toLowerCase() === 'recap' || ticket.toLowerCase() === 'admin')) {
+                        window.location.replace(redirectUrl);
+                    } else {
+                        // Lancer la séquence d'affichage des langues en fondu pour les clients
+                        startMultilingualLoading(redirectUrl);
+                    }
                 } else {
                     // Pas de lien actif stocké (le serveur est éteint)
                     showOfflineMessage("Le service est fermé", "La file d'attente est actuellement hors ligne. Veuillez vous assurer du lancement de l'application en présentiel.");
